@@ -1,0 +1,36 @@
+# yaml-language-server: $schema=https://www.isoloom.com/schema/v1.json
+# Nginx Misconfigurations (Vulhub, by phith0n and the Vulhub contributors) as an Isoloom spec:
+# Vulhub's nginx/insecure-configuration, vendored in build/nginx/app/, on the published image
+# vulhub/nginx:1 with Vulhub's mounted configuration, files and web root copied in.
+# `isoloom generate`, then `isoloom run docker`.
+version: 1
+name: vulhub-nginx-insecure-configuration
+
+networks:
+  lab: { cidr: 10.60.61.0/24, internet: false }
+
+machines:
+  nginx:
+    networks: { lab: 10 }
+    services:
+      - { port: 8080, name: crlf, http: true, publish: 8080 }
+      - { port: 8081, name: alias, http: true, publish: 8081 }
+      - { port: 8082, name: headers, http: true, publish: 8082 }
+    resources: { cpus: 1, memory_mb: 256 }
+    docker:
+      build: build/nginx
+
+checks:
+  - name: the CRLF server redirects
+    http: http://nginx:8080/
+    expect: 302
+    wait: 60
+  - name: the add_header server answers
+    http: http://nginx:8082/
+  - name: the alias server lists /files/
+    script: checks/alias.sh
+
+message: |
+  nginx answers on three ports: http://localhost:{{ machines.nginx.services.0.publish }}/ (redirects),
+  http://localhost:{{ machines.nginx.services.1.publish }}/files/ (an alias) and
+  http://localhost:{{ machines.nginx.services.2.publish }}/ (security headers). Read each one's configuration mistake.

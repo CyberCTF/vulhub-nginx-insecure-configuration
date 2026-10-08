@@ -1,0 +1,14 @@
+{
+  "title": "Nginx Misconfigurations",
+  "description": "Three nginx servers, each with a classic configuration mistake: a CRLF injection through $uri in a redirect, an alias traversal from a location without a trailing slash, and an add_header in a location that drops the server's security headers.",
+  "question": "Exploit the three nginx misconfigurations: inject a header, read files outside the alias, and lose the security headers.",
+  "category": "WEB",
+  "difficulty": 2,
+  "evidence_kind": "SECRET",
+  "capabilities": [
+    "crlf-injection",
+    "path-traversal",
+    "security-misconfiguration",
+    "nginx"
+  ]
+}
