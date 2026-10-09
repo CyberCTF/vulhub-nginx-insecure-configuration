@@ -4,11 +4,5 @@
   "question": "Exploit the three nginx misconfigurations: inject a header, read files outside the alias, and lose the security headers.",
   "category": "WEB",
   "difficulty": 2,
-  "evidence_kind": "SECRET",
-  "capabilities": [
-    "crlf-injection",
-    "path-traversal",
-    "security-misconfiguration",
-    "nginx"
-  ]
+  "evidence_kind": "SECRET"
 }
