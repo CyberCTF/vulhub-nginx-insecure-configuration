@@ -9,6 +9,9 @@ services:
   nginx:
     build:
       context: ../../build/nginx
+      labels:
+        isoloom.managed: 'true'
+        isoloom.environment: vulhub-nginx-insecure-configuration
     image: isoloom/vulhub-nginx-insecure-configuration-nginx
     platform: linux/amd64
     hostname: nginx
@@ -44,6 +47,8 @@ services:
       isoloom.service.crlf: http:8080
       isoloom.service.alias: http:8081
       isoloom.service.headers: http:8082
+      isoloom.managed: 'true'
+      isoloom.environment: vulhub-nginx-insecure-configuration
     restart: unless-stopped
   nginx-routes:
     image: alpine:3.20
@@ -65,6 +70,9 @@ services:
       nginx:
         condition: service_started
     restart: unless-stopped
+    labels:
+      isoloom.managed: 'true'
+      isoloom.environment: vulhub-nginx-insecure-configuration
   isoloom-check:
     image: curlimages/curl:8.11.1
     profiles:
@@ -86,6 +94,9 @@ services:
         condition: service_healthy
       nginx-routes:
         condition: service_healthy
+    labels:
+      isoloom.managed: 'true'
+      isoloom.environment: vulhub-nginx-insecure-configuration
   isoloom-check-nginx:
     image: curlimages/curl:8.11.1
     profiles:
@@ -101,6 +112,9 @@ services:
         condition: service_healthy
       nginx-routes:
         condition: service_healthy
+    labels:
+      isoloom.managed: 'true'
+      isoloom.environment: vulhub-nginx-insecure-configuration
   isoloom-probe-amd64:
     image: busybox:1.37.0-musl
     platform: linux/amd64
@@ -112,11 +126,20 @@ services:
     - isoloom-probe-amd64:/probe
     network_mode: none
     restart: no
+    labels:
+      isoloom.managed: 'true'
+      isoloom.environment: vulhub-nginx-insecure-configuration
 networks:
   lab:
     ipam:
       config:
       - subnet: 10.60.61.0/24
         gateway: 10.60.61.1
+    labels:
+      isoloom.managed: 'true'
+      isoloom.environment: vulhub-nginx-insecure-configuration
 volumes:
-  isoloom-probe-amd64: {}
+  isoloom-probe-amd64:
+    labels:
+      isoloom.managed: 'true'
+      isoloom.environment: vulhub-nginx-insecure-configuration

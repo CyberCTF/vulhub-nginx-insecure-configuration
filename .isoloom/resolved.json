@@ -116,7 +116,8 @@
       "vagrant": "needs `vm:` on nginx",
       "proxmox": "needs `vm:` on nginx",
       "cloud-vm": "needs `vm:` on nginx",
-      "external": "needs `external:` on nginx"
+      "external": "needs `external:` on nginx",
+      "cloud-services": "left out by `targets:`"
     }
   },
   "checks": {
