@@ -6,6 +6,9 @@
 version: 1
 name: vulhub-nginx-insecure-configuration
 
+# Given by the CyberCTF launcher: this player's flag. Without it the development flag.
+inputs: [CTF_FLAG_MAIN]
+
 networks:
   lab: { cidr: 10.60.61.0/24, internet: false }
 
@@ -17,8 +20,11 @@ machines:
       - { port: 8081, name: alias, http: true, publish: 8081 }
       - { port: 8082, name: headers, http: true, publish: 8082 }
     resources: { cpus: 1, memory_mb: 256 }
+    inputs: [CTF_FLAG_MAIN]
+    volumes: { ctf: /ctf }   # the flag, written by ctf/flag.sh at every start
     docker:
       build: build/nginx
+      init: [ctf/flag.sh]
 
 checks:
   - name: the CRLF server redirects

@@ -18,10 +18,15 @@ services:
     networks:
       lab:
         ipv4_address: 10.60.61.10
+    environment:
+      CTF_FLAG_MAIN: ${CTF_FLAG_MAIN:-}
     ports:
     - ${ISOLOOM_PUBLISH_ADDRESS:-127.0.0.1}:${ISOLOOM_PUBLISH_FIXED:+8080}:8080
     - ${ISOLOOM_PUBLISH_ADDRESS:-127.0.0.1}:${ISOLOOM_PUBLISH_FIXED:+8081}:8081
     - ${ISOLOOM_PUBLISH_ADDRESS:-127.0.0.1}:${ISOLOOM_PUBLISH_FIXED:+8082}:8082
+    volumes:
+    - nginx-ctf:/ctf
+    - isoloom-probe-amd64:/.isoloom-probe:ro
     healthcheck:
       test:
       - CMD
@@ -33,8 +38,6 @@ services:
       timeout: 3s
       retries: 60
       start_period: 10s
-    volumes:
-    - isoloom-probe-amd64:/.isoloom-probe:ro
     depends_on:
       isoloom-probe-amd64:
         condition: service_completed_successfully
@@ -73,6 +76,26 @@ services:
     labels:
       isoloom.managed: 'true'
       isoloom.environment: vulhub-nginx-insecure-configuration
+  nginx-init-1:
+    image: isoloom/vulhub-nginx-insecure-configuration-nginx
+    entrypoint:
+    - /bin/sh
+    - /isoloom/init/flag.sh
+    volumes:
+    - ../../ctf/flag.sh:/isoloom/init/flag.sh:ro
+    - nginx-ctf:/ctf
+    network_mode: service:nginx
+    environment:
+      CTF_FLAG_MAIN: ${CTF_FLAG_MAIN:-}
+    depends_on:
+      nginx:
+        condition: service_healthy
+      nginx-routes:
+        condition: service_healthy
+    restart: no
+    labels:
+      isoloom.managed: 'true'
+      isoloom.environment: vulhub-nginx-insecure-configuration
   isoloom-check:
     image: curlimages/curl:8.11.1
     profiles:
@@ -92,6 +115,8 @@ services:
     depends_on:
       nginx:
         condition: service_healthy
+      nginx-init-1:
+        condition: service_completed_successfully
       nginx-routes:
         condition: service_healthy
     labels:
@@ -110,6 +135,8 @@ services:
     depends_on:
       nginx:
         condition: service_healthy
+      nginx-init-1:
+        condition: service_completed_successfully
       nginx-routes:
         condition: service_healthy
     labels:
@@ -139,6 +166,10 @@ networks:
       isoloom.managed: 'true'
       isoloom.environment: vulhub-nginx-insecure-configuration
 volumes:
+  nginx-ctf:
+    labels:
+      isoloom.managed: 'true'
+      isoloom.environment: vulhub-nginx-insecure-configuration
   isoloom-probe-amd64:
     labels:
       isoloom.managed: 'true'

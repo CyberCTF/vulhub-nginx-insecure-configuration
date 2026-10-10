@@ -1,0 +1,70 @@
+{
+  "objectives": [
+    {
+      "key": "main",
+      "title": "Read the flag",
+      "prompt": "Use the alias misconfiguration on port 8081 to read /ctf/flag outside /files/ (the two other ports show the two other mistakes).",
+      "check": {
+        "evidence": "SECRET",
+        "format": "FLAG{%s}"
+      },
+      "dev": "FLAG{dev-vulhub-nginx-insecure-configuration}",
+      "hints": [
+        "Port 8081: look at how an alias without a trailing slash on its location concatenates the rest of the URI.",
+        "The flag is at /ctf/flag on the same host."
+      ],
+      "steps": [
+        {
+          "key": "directive",
+          "title": "Find the directive",
+          "prompt": "Which nginx directive is misconfigured on port 8081? (directive name)",
+          "check": {
+            "answer": [
+              "alias"
+            ]
+          }
+        },
+        {
+          "key": "missing",
+          "title": "Find the mistake",
+          "prompt": "Which character is missing from that location block?",
+          "check": {
+            "answer": [
+              "/",
+              "slash",
+              "trailing slash",
+              "a slash",
+              "the trailing slash",
+              "a trailing slash"
+            ]
+          }
+        },
+        {
+          "key": "crlf",
+          "title": "Name the 8080 weakness",
+          "prompt": "Which vulnerability class does the redirect on port 8080 have?",
+          "check": {
+            "answer": [
+              "crlf injection",
+              "crlf",
+              "header injection",
+              "http header injection",
+              "http response splitting",
+              "response splitting"
+            ]
+          }
+        },
+        {
+          "key": "headers",
+          "title": "Name the 8082 directive",
+          "prompt": "Which directive on port 8082 loses the parent block's headers when repeated in a child block? (directive name)",
+          "check": {
+            "answer": [
+              "add_header"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
