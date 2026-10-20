@@ -1,1 +1,11 @@
-{"title": "Nginx Misconfigurations", "description": "Three nginx servers, each with a classic configuration mistake: a CRLF injection through $uri in a redirect, an alias traversal from a location without a trailing slash, and an add_header in a location that drops the server's security headers.", "question": "Exploit the nginx alias misconfiguration to read /ctf/flag outside the /files/ directory, and study the CRLF and add_header mistakes on the other ports.", "category": "WEB", "difficulty": 2, "evidence_kind": "SECRET"}
+{
+  "project_name": "cyberlabs-vulhub-nginx-insecure-configuration",
+  "slug": "vulhub-nginx-insecure-configuration",
+  "title": "Nginx Misconfigurations",
+  "description": "Three nginx servers, each with a classic configuration mistake: a CRLF injection through $uri in a redirect, an alias traversal from a location without a trailing slash, and an add_header in a location that drops the server's security headers.",
+  "category": "web",
+  "difficulty": 2,
+  "evidence_kind": "SECRET",
+  "capabilities": [],
+  "question": "Exploit the nginx alias misconfiguration to read /ctf/flag outside the /files/ directory, and study the CRLF and add_header mistakes on the other ports."
+}
